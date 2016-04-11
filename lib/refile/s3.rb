@@ -61,9 +61,9 @@ module Refile
       id = @hasher.hash(uploadable)
 
       if uploadable.is_a?(Refile::File) and uploadable.backend.is_a?(S3) and uploadable.backend.access_key_id == access_key_id
-        object(id).copy_from(copy_source: [@bucket_name, uploadable.backend.object(uploadable.id).key].join("/"))
+        object(id).copy_from(copy_source: [@bucket_name, uploadable.backend.object(uploadable.id).key].join("/"), acl: :public_read)
       else
-        object(id).put(body: uploadable, content_length: uploadable.size)
+        object(id).put(body: uploadable, content_length: uploadable.size, acl: :public_read)
       end
 
       Refile::File.new(self, id)
